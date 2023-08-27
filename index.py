@@ -1,8 +1,10 @@
 import numpy as np
 import scipy.io.wavfile as wavfile
 import tkinter as tk
-import pygame
+import pygame, sys
 from mix import mix_audio
+from graph import GenWavF
+from PIL import Image, ImageTk
 
 # Sampling rate y duración.
 
@@ -95,6 +97,10 @@ frequencies = [370,392,415.30,440,466,493.88,523.25]
 
 # Tkinter
 
+def UpdateImage():
+    newimg = ImageTk.PhotoImage(Image.open("./assets/graphc.png"))
+    label1.config(image=newimg)
+    label1.image = newimg 
 
 # Creo la ventana.
 
@@ -120,6 +126,10 @@ def play_sound():
     # Load and play the sound
     pygame.mixer.init(frequency=44100)
     pygame.mixer.Sound(sound_path).play()
+
+def on_closing():
+    root.destroy()  # Cierro la ventana de TKINTER
+    sys.exit()      # Cierro el script the python
 
 # Valores Base
 
@@ -231,6 +241,9 @@ def GenerateSignals():
     input_files = ['output/signal1.wav', 'output/signal2.wav', 'output/signal3.wav']
     mix_audio(input_files, 'output/combined_signal.wav')
 
+    GenWavF()
+    UpdateImage()
+
     print("Combined signal saved.")
 
 def CambiarPitch1():
@@ -288,6 +301,23 @@ pit3_but.place(x=465,y=408)
 
 gen3s = tk.Button(root, text="GENERATE", command=GenerateSignals, font=("Spartan",17,"bold"),fg="#ff5757",background="#5e17eb",borderwidth=0)
 gen3s.place(x=950,y=361)
+
+# Imagén del gráfico de la función
+
+image1 = Image.open("./assets/graphc.png")
+test = ImageTk.PhotoImage(image1)
+
+label1 = tk.Label(image=test, borderwidth=1,bg="white")
+label1.image = test
+
+# Posicion de la imagen
+
+label1.place(x=0, y=212)
+root.mainloop()
+
+# Protocolo para cerrar el script al cerrar la ventana.
+
+root.protocol("WM_DELETE_WINDOW", on_closing)
 
 # Tkinter Loop
 
